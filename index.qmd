@@ -506,7 +506,7 @@ end
 Based on the elbow plot, choose a number of clusters and run k-means:
 
 ```{julia}
-n_clusters = 6
+n_clusters = 7
 result = kmeans(pc_scores_scaled, n_clusters; verbose=true)
 
 println("\nConverged: $(result.converged)")
@@ -574,14 +574,23 @@ Answer the following questions about the weather typing methodology:
 ### Implementation Questions
 
 - Explain in your own words what the `assign_to_nearest_centroid` function does and why it's important for k-means clustering.
+*It calculates the euclidean distance between a point and each centroid, then assigns the point to the nearest centroid*
 - Explain in your own words what the `update_centroids` function does and why it's important for k-means clustering.
+*it computes the mean location of each point in a cluster and then updates the centroid to be that location. This is important in kmeans becuase it can be used iteratively with reassigning centroids to better represent groups*
 - Why does k-means use squared Euclidean distance rather than absolute distance? What would happen if you used absolute distance instead?
+*With euclidean distance the updated center of the centroid is the mean of the points, with absolute it would be the median*
 
 ### Weather Typing Analysis
 
 - Visualize streamfunction anomalies for at least 3 different days. Then, identify the weather types for each day. How well do individual days match their cluster composite patterns?
+*Based on the anomolies each day matches its assigned cluster pattern well*
 - Do your EOF spatial patterns match those shown in the paper?
+*Similar but not exactly the same, higher resolution for the ones in the paper, EOF 1 accounts for slightly more variability*
 - Do your weather type composites used with default settings (approximately matching the paper) match those in the paper? If not, why might they differ?
+*Not entirely, could be due to initialization of centroids, EOFs, or data precprocessing?*
 - What is the effect of changing the number of retained PCs on the weather type patterns?
+*More PC more detail*
 - What is the effect of rescaling PCs before clustering? Try clustering without rescaling and compare results.
+*With no rescaling on the PCs PC1 tends to dominate over the others changing the WT's*
 - What is the impact of changing the number of clusters (k) on the weather type patterns?
+*More k's can lead to more specific grouping but can also over-group*
