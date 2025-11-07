@@ -58,9 +58,10 @@ function assign_to_nearest_centroid(data::Matrix{T}, centroids::Matrix{T}) where
     labels = zeros(Int, n_samples)
 
     for i in 1:n_samples
-        # TODO: Fix this - should compute distances and find nearest
-        # Currently just assigns randomly
-        labels[i] = rand(1:k)
+        
+        euc_distances = [sum((data[i, :] .- centroids[j, :]).^2) for j in 1:k]
+        # Assign to the nearest centroid, takes smallest distance
+        labels[i] = argmin(euc_distances)
     end
 
     return labels
@@ -89,10 +90,11 @@ function update_centroids(data::Matrix{T}, labels::Vector{Int}, k::Int) where {T
         cluster_points = data[cluster_mask, :]
 
         if size(cluster_points, 1) > 0
-            # TODO: Fix this - should compute mean of all cluster points
-            # Currently just picks a random point from the cluster
-            random_idx = rand(1:size(cluster_points, 1))
-            centroids[cluster, :] = cluster_points[random_idx, :]
+            # Compute mean of all points in this cluster, column wise
+            centroids[cluster, :] = mean(cluster_points, dims=1)
+        else
+            # If cluster is empty, leave centroid unchanged
+            centroids[cluster, :] .= centroids[cluster, :]
         end
     end
 
